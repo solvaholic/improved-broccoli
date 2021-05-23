@@ -1,10 +1,12 @@
-name: Run Marlin tests
+name: Build Marlin firmware
 
 on:
-  # Run on push to any branch, if .h files changed
+  # Run on push to any branch, if .h files changed in main
   push:
     paths:
       - '*/*.h'
+    branches:
+      - main
   # Run when manually triggered
   workflow_dispatch:
 
@@ -29,7 +31,7 @@ jobs:
       # Copy config files into Marlin directory
       - run: |
           cp ./myconfig/CrealityV427/*.h ./marlin/Marlin/
-      # Run Marlin tests
+      # Build Marlin firmware
       - run: |
-          make tests-single-local TEST_TARGET=STM32F103RET6_creality
+          pio run -e STM32F103RET6_creality
         working-directory: ./marlin
