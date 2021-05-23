@@ -1,0 +1,36 @@
+name: Run Marlin tests
+
+on:
+  # Run on push to any branch, if .h files changed
+  push:
+    paths:
+      - '*/*.h'
+  # Run when manually triggered
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-20.0.4
+    steps:
+      # Checkout the configuration code at /myconfig
+      - uses: actions/checkout@v2
+        with:
+          path: ./myconfig
+      # Checkout the Marlin firmware code at /marlin
+      - uses: actions/checkout@v2
+        with:
+          repository: MarlinFirmware/Marlin
+          ref: 2.0.x
+          path: ./marlin
+      # Install and update PlatformIO
+      - run: |
+          pip install --upgrade platformio
+          pio platform update
+      # Copy config files into Marlin directory
+      - run: |
+          cp ./myconfig/CrealityV427/*.h ./marlin/Marlin/
+      # Run Marlin tests
+      - run: |
+          pushd ./marlin
+          make tests-single-local TEST_TARGEET=STM32F103RET6_creality
+          popd
