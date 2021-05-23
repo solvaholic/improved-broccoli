@@ -32,5 +32,5 @@ jobs:
       # Run Marlin tests
       - run: |
           pushd ./marlin
-          make tests-single-local TEST_TARGEET=STM32F103RET6_creality
+          make tests-single-local TEST_TARGET=STM32F103RET6_creality
           popd
