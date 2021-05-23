@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-20.0.4
+    runs-on: ubuntu-20.04
     steps:
       # Checkout the configuration code at /myconfig
       - uses: actions/checkout@v2
