@@ -22,6 +22,10 @@ jobs:
           repository: MarlinFirmware/Marlin
           ref: 2.0.x
           path: ./marlin
+      # Set up Python, to run PlatformIO
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.5'
       # Install and update PlatformIO
       - run: |
           pip install --upgrade platformio
