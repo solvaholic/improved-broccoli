@@ -1,4 +1,4 @@
-name: Run Marlin tests
+name: Marlin test, build, and publish
 
 on:
   # Run on push to any branch, if .h files changed
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  test-build-publish:
     runs-on: ubuntu-20.04
     steps:
       # Checkout the configuration code at /myconfig
@@ -30,6 +30,12 @@ jobs:
       - run: |
           cp ./myconfig/CrealityV427/*.h ./marlin/Marlin/
       # Run Marlin tests
-      - run: |
+      - if: ${{ success() && ( github.ref != 'refs/heads/main' || github.event_name == 'workflow_dispatch' ) }}
+        run: |
           make tests-single-local TEST_TARGET=STM32F103RET6_creality
+        working-directory: ./marlin
+      # Build Marlin firmware
+      - if: ${{ success() && ( github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' ) }}
+        run: |
+          pio run -e STM32F103RET6_creality
         working-directory: ./marlin
